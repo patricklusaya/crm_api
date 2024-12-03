@@ -28,27 +28,19 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'location' => 'required|min:6',
+            'phone_number' => 'required',
             'roles' => 'required|array',
-            'profile_image' => 'nullable|image|max:2048', 
+           
         ]);
     
        
-        $profileImagePath = null;
-    
-      
-        if ($request->hasFile('profile_image')) {
-
-            // Store the uploaded image and get its path
-            $profileImagePath = $request->file('profile_image')->store('profiles', 'public');
-        }
+       
     
         // Create the user with validated data
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'location' => $validatedData['location'],
-            'profile_image' => $profileImagePath, 
+            'phone_number' => $validatedData['phone_number'],
             'password' => bcrypt($validatedData['password']),
         ]);
 

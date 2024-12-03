@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\JobsController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
@@ -26,36 +27,13 @@ Route::post( '/signout', [AuthController::class, 'signout'])->middleware('auth:s
 // find info of a user
 Route::get( '/users/{id}', [AuthController::class, 'findUser'])->middleware('auth:sanctum');
 
-// view jobs
-Route::get( '/jobs', [JobsController::class, 'index']);
-Route::get( '/jobs/{id}', [JobsController::class, 'show']);
 
+Route::post( '/signin', [AuthController::class, 'signin']);
 
-// PROTECTED  ENDPOINTS
-// post jobs
-Route::post( '/jobs', [JobsController::class, 'store'])->middleware('auth:sanctum');
-// edit job post
-Route::put( '/jobs/{id}', [JobsController::class, 'update'])->middleware('auth:sanctum');
+Route::middleware('api')->group(function () {
+    Route::post('/customers', [CustomerController::class, 'store']);
+    Route::get('/customers', [CustomerController::class, 'index']);
+    Route::put('/customers/{id}', [CustomerController::class, 'update']); // Update customer
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
+});
 
-// delete job
-Route::delete( '/jobs/{id}', [JobsController::class, 'destroy'])->middleware('auth:sanctum');
-// sign out
-Route::post( '/signout', [AuthController::class, 'signout'])->middleware('auth:sanctum');
-
-// application, 
-Route::post( '/apply', [ApplicationController::class, 'store'])->middleware('auth:sanctum');
-
-// respond to application,
-Route::post( 'applications/{id}/status', [ApplicationController::class, 'changeStatus'])->middleware('auth:sanctum');
-
-// get all applications for my posted jobs
-Route::get( '/jobs/{id}/applications', [ApplicationController::class, 'myJobs'])->middleware('auth:sanctum');
-
-// get all applications a seeker is in 
-Route::get( 'applications/all', [ApplicationController::class, 'seekerApplications'])->middleware('auth:sanctum');
-
-//get all jobs user applied 
-Route::get( '/applications', [ApplicationController::class, 'showAppliedJobs'])->middleware('auth:sanctum');
-
-//filter jobs
-Route::post( '/jobs/filter', [JobsController::class, 'filterJobs'])->middleware('auth:sanctum');
